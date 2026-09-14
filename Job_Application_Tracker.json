@@ -1,0 +1,570 @@
+{
+  "name": "Job Application Tracker",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Job Application Form",
+        "formDescription": "Pls fill the form with accurate details",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Full Name"
+            },
+            {
+              "fieldLabel": "Email"
+            },
+            {
+              "fieldLabel": "Phone Number"
+            },
+            {
+              "fieldLabel": "Applying Position",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Logistic Analyst"
+                  },
+                  {
+                    "option": "Warehouse Operation Manager"
+                  },
+                  {
+                    "option": "Logistic Manager"
+                  },
+                  {
+                    "option": "Storage and Distribution Manager"
+                  },
+                  {
+                    "option": "Technical Support"
+                  },
+                  {
+                    "option": "Transportation Coordinator"
+                  },
+                  {
+                    "option": "Inventory Control Specialist"
+                  },
+                  {
+                    "option": "Supply Chain Manager"
+                  },
+                  {
+                    "option": "Procurement Specialist"
+                  }
+                ]
+              }
+            },
+            {
+              "fieldLabel": "Years of experience",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "0-2"
+                  },
+                  {
+                    "option": "3-5"
+                  },
+                  {
+                    "option": "6+"
+                  }
+                ]
+              }
+            },
+            {
+              "fieldLabel": "Current Location"
+            },
+            {
+              "fieldLabel": "Link to CV or portfolio"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.6,
+      "position": [
+        0,
+        144
+      ],
+      "id": "5eae7b12-29fd-4dd2-8b33-59390c7403c6",
+      "name": "Application form",
+      "webhookId": "f6b13516-ad5c-4867-9dbb-18827ac187ec"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_GOOGLE_SHEET_ID_HERE",
+          "mode": "list",
+          "cachedResultName": "Job Application Database",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_GOOGLE_SHEET_ID_HERE/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_GOOGLE_SHEET_ID_HERE/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Full Name": "={{ $json['Full Name'] }}",
+            "Email": "={{ $json.Email }}",
+            "Phone Number": "={{ $json['Phone Number'] }}",
+            "Applying Position": "={{ $json['Applying Position'] }}",
+            "Years of experience": "={{ $json['Years of experience'] }}",
+            "Current Location": "={{ $json['Current Location'] }}",
+            "Link to CV or portfolio": "={{ $json['Link to CV or portfolio'] }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Full Name",
+              "displayName": "Full Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Phone Number",
+              "displayName": "Phone Number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Applying Position",
+              "displayName": "Applying Position",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Years of experience",
+              "displayName": "Years of experience",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Current Location",
+              "displayName": "Current Location",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Link to CV or portfolio",
+              "displayName": "Link to CV or portfolio",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        224,
+        144
+      ],
+      "id": "d825788f-7b98-4be0-bdb5-d46176c4c122",
+      "name": "Application Database",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "vy5c03CcTLa9T2Y3",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Application Database').item.json.Email }}",
+        "subject": "Application Update",
+        "emailType": "text",
+        "message": "=Dear {{ $('Application Database').item.json['Full Name'] }},  \n\nThank you for taking the time to apply for the {{ $('Application Database').item.json['Applying Position'] }} position and for sharing your background and experience with us. \n\nWe genuinely appreciate the effort you put into your application.  While we were impressed with your qualifications, we have decided to move forward with other candidates whose profiles more closely align with our current needs for this role.  \n\nWe will keep your information on file for future opportunities.\n\nWarm regards,  \nOkafor Logistics",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        896,
+        48
+      ],
+      "id": "6de77bc1-aee1-4011-b107-cbab3c786e86",
+      "name": "Ejection mail",
+      "webhookId": "752d7131-7880-4f5a-adb4-3ce1bc80ef4d",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "CWgm6x4Hg8oJthQ3",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Application Database').item.json.Email }}",
+        "subject": "=Invitation to Interview with Okafor Logistics",
+        "emailType": "text",
+        "message": "=Dear {{ $('Application Database').item.json['Full Name'] }},  \n\nThank you for applying for the {{ $('Application Database').item.json['Applying Position'] }} position at D. \nWe were very impressed with your background and qualifications, and we would love to invite you for an interview. \n\nInterview Details:  \nRole:   {{ $('Application Database').item.json['Applying Position'] }}\nFormat: [Virtual - Zoom ]\nDuration: 30–45 minutes  \nDate & Time Options:   29th Aug 3pm\nMeeting Link: Will be communicated\n\nA member of our HR team will contact you shortly\n\nWarm regards,  \nOkafor Logistics",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        896,
+        240
+      ],
+      "id": "9ffe9e3a-e86d-4e65-ae92-75cd92706aaf",
+      "name": "Interview mail",
+      "webhookId": "752d7131-7880-4f5a-adb4-3ce1bc80ef4d",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "CWgm6x4Hg8oJthQ3",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "da4a7ec5-30fd-4f90-97b5-c97c4287698b",
+              "leftValue": "={{ $json['Years of experience'] }}",
+              "rightValue": "0-2",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        448,
+        144
+      ],
+      "id": "0d4f5c2f-7bc9-4c5a-aa7f-9ebb55f431c0",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "amount": 2,
+        "unit": "days"
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        672,
+        48
+      ],
+      "id": "d066a590-2579-4e27-b948-e2f020dfdb09",
+      "name": "Wait",
+      "webhookId": "6cf56a56-c2f7-4b08-a63d-db397e570a17"
+    },
+    {
+      "parameters": {
+        "amount": 2,
+        "unit": "days"
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        672,
+        240
+      ],
+      "id": "b87b1023-b115-4f5f-be13-a8dff2633709",
+      "name": "Wait1",
+      "webhookId": "6cf56a56-c2f7-4b08-a63d-db397e570a17"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.Email }}",
+        "subject": "Confirmation mail",
+        "emailType": "text",
+        "message": "=Hello {{ $json['Full Name']  }},  \n\nThank you for applying for the position of {{ $json['Applying Position'] }}. \nWe have received your application and our recruitment team will review it and get back to you.  \n\nRegards, \nOkafor Logistics",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        448,
+        -144
+      ],
+      "id": "f6fe3992-1b23-4f7d-b2fb-8a6e3abfe4bc",
+      "name": "Confirmation Mail",
+      "webhookId": "13bf0f6f-e31a-4e44-b341-8287be3b52f3",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "CWgm6x4Hg8oJthQ3",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "hr-team@example.com",
+        "subject": "New Job Application Received",
+        "emailType": "text",
+        "message": "=A new candidate has applied.\n\nName:{{ $('Application Database').item.json['Full Name'] }}\nPosition: {{ $('Application Database').item.json['Applying Position'] }}\nExperience: {{ $('Application Database').item.json['Years of experience'] }}\nEmail: {{ $('Application Database').item.json.Email }}\nPhone: {{ $('Application Database').item.json['Phone Number'] }}\nCV: {{ $('Application Database').item.json['Link to CV or portfolio'] }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        672,
+        -144
+      ],
+      "id": "975b9ef9-36ef-49e3-9409-68fec6eca23d",
+      "name": "HR Email",
+      "webhookId": "13bf0f6f-e31a-4e44-b341-8287be3b52f3",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "CWgm6x4Hg8oJthQ3",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json['Years of experience'] }}",
+                    "rightValue": "0-2",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "dec31752-cf55-4651-bfda-753174f76d27"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Entry Level"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "506c08c3-4422-4c90-a52b-73274001d6f3",
+                    "leftValue": "={{ $json['Years of experience'] }}",
+                    "rightValue": "3-5",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Mid Level"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "5f16e19c-83bd-4e9c-aadc-b30526ff843d",
+                    "leftValue": "={{ $json['Years of experience'] }}",
+                    "rightValue": "6+",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Senior Level"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        448,
+        336
+      ],
+      "id": "e0500a70-6e44-4ca7-bde6-a6220fd7ace8",
+      "name": "Switch"
+    }
+  ],
+  "connections": {
+    "Application form": {
+      "main": [
+        [
+          {
+            "node": "Application Database",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Application Database": {
+      "main": [
+        [
+          {
+            "node": "Confirmation Mail",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wait1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Ejection mail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait1": {
+      "main": [
+        [
+          {
+            "node": "Interview mail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Confirmation Mail": {
+      "main": [
+        [
+          {
+            "node": "HR Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HR Email": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "staticData": null,
+  "pinData": {},
+  "triggerCount": 0,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  }
+}
