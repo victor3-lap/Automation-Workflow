@@ -1,0 +1,252 @@
+{
+  "name": "Lead Management",
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_GOOGLE_SHEET_ID_HERE",
+          "mode": "list",
+          "cachedResultName": "Leads Gen",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_GOOGLE_SHEET_ID_HERE/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_GOOGLE_SHEET_ID_HERE/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "FIRST NAME": "={{ $json['First Name'] }}",
+            "LAST NAME": "={{ $json['Last Name'] }}",
+            "EMAIL": "={{ $json.Email }}",
+            "PHONE NUMBER": "={{ $json['Phone Number'] }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "FIRST NAME",
+              "displayName": "FIRST NAME",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "LAST NAME",
+              "displayName": "LAST NAME",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "EMAIL",
+              "displayName": "EMAIL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "PHONE NUMBER",
+              "displayName": "PHONE NUMBER",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        224,
+        64
+      ],
+      "id": "8991daf0-cd3d-41ce-80ad-88d5e7d2316a",
+      "name": "Leads Database",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "vy5c03CcTLa9T2Y3",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "formTitle": "Quote form",
+        "formDescription": "Get your pricing and FAQ",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "First Name"
+            },
+            {
+              "fieldLabel": "Last Name"
+            },
+            {
+              "fieldLabel": "Email",
+              "fieldType": "email"
+            },
+            {
+              "fieldLabel": "Phone Number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.6,
+      "position": [
+        0,
+        64
+      ],
+      "id": "0502bf9b-b809-430a-b338-76d43e8a6b68",
+      "name": "Website Submission",
+      "webhookId": "bab8dd3d-6a14-444a-b347-ef1a6e4bdb5f"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Leads Database').item.json.EMAIL }}",
+        "subject": "Welcome to B&B – We’re glad you’re here!",
+        "emailType": "text",
+        "message": "=Thank you for reaching out and showing interest in B&B. \n\nWe are thrilled to connect with you!  Whether you're looking to explore our solutions, learn more about how we can support your goals, or simply have a few questions answered, our team is here to help you every step of the way.  \n\nTo help us get started on the right foot, feel free to reply directly to this email with any questions, or you can\n[Click Here to Schedule a Brief Call/Explore Our Services]. \n\nWe look forward to building a great relationship with you!\n\nWarm regards,  \nManagement",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        448,
+        160
+      ],
+      "id": "bc82c39e-3e03-4ccb-8efd-5f7f6efe3030",
+      "name": "Welcome Leads Mail",
+      "webhookId": "8c023114-33c6-4dbc-a824-fc4aec1e69e5",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "CWgm6x4Hg8oJthQ3",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "sales-team@example.com",
+        "subject": "New Lead Alert",
+        "emailType": "text",
+        "message": "=Hi Team,  Great news! We have received a new lead. \nHere are the key details:\n\nFirst Name: {{ $('Leads Database').item.json['FIRST NAME'] }}\nLast Name:{{ $('Leads Database').item.json['LAST NAME'] }}\nEmail: {{ $('Leads Database').item.json.EMAIL }}\nPhone number:{{ $('Leads Database').item.json['PHONE NUMBER'] }}\n\nDatabase has been updated. \nLet’s keep the momentum going! ",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        688,
+        -16
+      ],
+      "id": "837e10cb-9810-4383-a0dc-594a584c866a",
+      "name": "Mail to team",
+      "webhookId": "585bd19e-ddac-48bc-9b81-dc5ac6c6d839",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "CWgm6x4Hg8oJthQ3",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "select": "user",
+        "user": {
+          "__rl": true,
+          "value": "USLACKBOT",
+          "mode": "list",
+          "cachedResultName": "slackbot"
+        },
+        "text": "New Lead alert",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.5,
+      "position": [
+        480,
+        -16
+      ],
+      "id": "23e1cd41-c0c5-4d17-bd1c-31e9d082e78a",
+      "name": "Send a message",
+      "webhookId": "424d29d4-ee29-42f4-b2ee-02c4566c2725",
+      "credentials": {
+        "slackOAuth2Api": {
+          "id": "o0HdYqeZ34PendRL",
+          "name": "Slack account 2"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Leads Database": {
+      "main": [
+        [
+          {
+            "node": "Welcome Leads Mail",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Website Submission": {
+      "main": [
+        [
+          {
+            "node": "Leads Database",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message": {
+      "main": [
+        [
+          {
+            "node": "Mail to team",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "staticData": null,
+  "pinData": {},
+  "triggerCount": 0,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  }
+}

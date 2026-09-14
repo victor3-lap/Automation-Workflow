@@ -1,0 +1,477 @@
+{
+  "name": "My workflow 2",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_GOOGLE_SHEET_ID_HERE",
+          "mode": "list",
+          "cachedResultName": "Event Registration (Responses)",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_GOOGLE_SHEET_ID_HERE/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 992366115,
+          "mode": "list",
+          "cachedResultName": "Form Responses 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_GOOGLE_SHEET_ID_HERE/edit#gid=992366115"
+        },
+        "event": "rowAdded",
+        "options": {}
+      },
+      "id": "4f817da6-9c47-495c-9e89-350925553dc7",
+      "name": "Google Sheets Trigger",
+      "type": "n8n-nodes-base.googleSheetsTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        48
+      ],
+      "credentials": {
+        "googleSheetsTriggerOAuth2Api": {
+          "id": "mPNf36EaSh2wk7Mh",
+          "name": "Google Sheets Trigger account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "email-not-empty",
+              "leftValue": "={{ $json.Email }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "1aabf1bb-4324-48c3-afdb-0f3fbddb8363",
+      "name": "Has Email",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.3,
+      "position": [
+        224,
+        48
+      ]
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "blockchain",
+                    "leftValue": "={{ $json['Preferred Session'] }}",
+                    "rightValue": "Blockchain",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "career",
+                    "leftValue": "={{ $json['Preferred Session'] }}",
+                    "rightValue": "Career Talk",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "health",
+                    "leftValue": "={{ $json['Preferred Session'] }}",
+                    "rightValue": "Health",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "96daea4b-d9c5-4337-a7ae-4c55679ae1b9",
+      "name": "Route by Session",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        448,
+        32
+      ]
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.Email }}",
+        "subject": "Thank you for registering for our upcoming Blockchain Talk!",
+        "emailType": "text",
+        "message": "=Dear {{ $json['Full Name'] }},\nThank you for registering for our upcoming Blockchain session. We are thrilled to have you join us for what promises to be an insightful and engaging experience.\n\nOur team is bringing together industry experts and innovators to explore the latest advancements, trends, and real-world applications transforming the blockchain ecosystem. Whether you are looking to deepen your technical expertise, discover new strategic opportunities, or connect with fellow professionals, we are confident you will find great value in the sessions ahead.\n\nWe will share the full event agenda, speaker details, and access information with you shortly. In the meantime, please feel free to reach out if you have any questions.\n\nThank you again for your interest, and we look forward to welcoming you soon.",
+        "options": {}
+      },
+      "id": "288c9f98-a6dd-4f41-befb-cb2a4f28fb10",
+      "name": "Send Blockchain Email",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        672,
+        -144
+      ],
+      "webhookId": "38f21773-dac4-4b8b-b4b0-6bd06d6f5166",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "CWgm6x4Hg8oJthQ3",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.Email }}",
+        "subject": "Thank you for registering for our upcoming Career Talk!",
+        "emailType": "text",
+        "message": "=Dear {{ $json['Full Name'] }},\nThank you for registering for our upcoming Career Talk session. We are thrilled to have you join us for what promises to be an insightful and engaging experience.\n\nOur team is bringing together industry leaders and mentors to share practical guidance on career growth, professional development, and navigating today's evolving job market. Whether you are looking to advance in your field, explore new opportunities, or connect with fellow professionals, we are confident you will find great value in the sessions ahead.\n\nWe will share the full event agenda, speaker details, and access information with you shortly. In the meantime, please feel free to reach out if you have any questions.\n\nThank you again for your interest, and we look forward to welcoming you soon.",
+        "options": {}
+      },
+      "id": "c4382364-3187-43a2-9369-95542a4ad2ab",
+      "name": "Send Career Talk Email",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        672,
+        48
+      ],
+      "webhookId": "585403fb-f94e-4b51-95d0-99e4f7e9eccf",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "CWgm6x4Hg8oJthQ3",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.Email }}",
+        "subject": "Thank you for registering for our upcoming Health Talk!",
+        "emailType": "text",
+        "message": "=Dear {{ $json['Full Name'] }},\nThank you for registering for our upcoming Health session. We are thrilled to have you join us for what promises to be an insightful and engaging experience.\n\nOur team is bringing together health experts and practitioners to explore the latest insights on wellbeing, healthy living, and practical strategies for a balanced life. Whether you are looking to improve your wellbeing, learn from specialists, or connect with fellow attendees, we are confident you will find great value in the sessions ahead.\n\nWe will share the full event agenda, speaker details, and access information with you shortly. In the meantime, please feel free to reach out if you have any questions.\n\nThank you again for your interest, and we look forward to welcoming you soon.",
+        "options": {}
+      },
+      "id": "79e91bd5-a69e-41da-9bfe-a73d4e5a3117",
+      "name": "Send Health Email",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        672,
+        240
+      ],
+      "webhookId": "da20dae4-7801-4ee6-a216-145fdee0362d",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "CWgm6x4Hg8oJthQ3",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resume": "specificTime",
+        "dateTime": "2026-07-21T15:00:00"
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        896,
+        -144
+      ],
+      "id": "55f53b95-b11b-4145-a4eb-b74090510131",
+      "name": "Wait",
+      "webhookId": "92fd6ece-7490-4207-b5fb-6e018957040d"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Route by Session').item.json['Full Name'] }}",
+        "subject": "Reminder: Our upcoming event is just around the corner!",
+        "emailType": "text",
+        "message": "=Dear {{ $('Route by Session').item.json['Full Name'].split(' ')[0] }},  \n\nThis is a quick reminder that our event is coming up soon on December 15th! We are incredibly excited to have you join us.  We are putting the final touches on the sessions and can't wait to share these valuable insights and expert perspectives with you.  \n\nEvent Reminder Details:  \nDate: December 15th 2026  \nTime: 9:00am  \nLocation: {{ $('Google Sheets Trigger').item.json['Event you are attending'] }}\n\nPlease ensure you have saved the date and time in your calendar. We will send over the final connection details and agenda as we get closer to the day.  If you have any questions in the meantime, don't hesitate to reach out.\nSee you on the 15th!  \nWarm regards, \nAdmin",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1120,
+        -144
+      ],
+      "id": "12ed6ca9-3c3c-485f-b723-c7f1f31901ff",
+      "name": "Send a message",
+      "webhookId": "173c19b1-2c1c-4916-8809-8e4002387279",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "CWgm6x4Hg8oJthQ3",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Route by Session').item.json.Email }}",
+        "subject": "Reminder: Our upcoming event is just around the corner!",
+        "emailType": "text",
+        "message": "=Dear {{ $('Route by Session').item.json['Full Name'].split(' ')[0] }},    This is a quick reminder that our event is coming up soon on December 15th! We are incredibly excited to have you join us.  We are putting the final touches on the sessions and can't wait to share these valuable insights and expert perspectives with you.    Event Reminder Details:   Date: December 15th 2026   Time: 9:00am   Location: {{ $('Google Sheets Trigger').item.json['Event you are attending'] }}  Please ensure you have saved the date and time in your calendar. We will send over the final connection details and agenda as we get closer to the day.  If you have any questions in the meantime, don't hesitate to reach out. See you on the 15th!   Warm regards,  Admin",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1120,
+        48
+      ],
+      "id": "7eb9abfa-5af5-494e-98b7-8f230b205d4b",
+      "name": "Send a message1",
+      "webhookId": "572034ca-a4bb-4a91-8efd-b29abfb2419f",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "CWgm6x4Hg8oJthQ3",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resume": "specificTime",
+        "dateTime": "2026-07-21T15:00:00"
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        896,
+        48
+      ],
+      "id": "063c7128-a3c6-4373-a734-afa1c03ebf24",
+      "name": "Wait1",
+      "webhookId": "f0be40a3-e0d4-49d8-9887-7c2f13938f13"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Route by Session').item.json.Email }}",
+        "subject": "Reminder: Our upcoming event is just around the corner!",
+        "emailType": "text",
+        "message": "=Dear {{ $('Route by Session').item.json['Full Name'].split(' ')[0] }},    This is a quick reminder that our event is coming up soon on December 15th! We are incredibly excited to have you join us.  We are putting the final touches on the sessions and can't wait to share these valuable insights and expert perspectives with you.    Event Reminder Details:   Date: December 15th 2026   Time: 9:00am   Location: {{ $('Google Sheets Trigger').item.json['Event you are attending'] }}  Please ensure you have saved the date and time in your calendar. We will send over the final connection details and agenda as we get closer to the day.  If you have any questions in the meantime, don't hesitate to reach out. See you on the 15th!   Warm regards,  Admin",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1120,
+        240
+      ],
+      "id": "9974601e-7933-4097-b7b0-c53cd819d704",
+      "name": "Send a message2",
+      "webhookId": "6c08fb82-e4b0-4464-b133-fcf8ea04cc83",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "CWgm6x4Hg8oJthQ3",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resume": "specificTime",
+        "dateTime": "2026-07-21T15:00:00"
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        896,
+        240
+      ],
+      "id": "366c77ee-db21-4b7e-aefd-ad5a7a6bc130",
+      "name": "Wait2",
+      "webhookId": "c91956e8-39d3-489a-974d-4ff893e988e8"
+    }
+  ],
+  "connections": {
+    "Google Sheets Trigger": {
+      "main": [
+        [
+          {
+            "node": "Has Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Has Email": {
+      "main": [
+        [
+          {
+            "node": "Route by Session",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route by Session": {
+      "main": [
+        [
+          {
+            "node": "Send Blockchain Email",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send Career Talk Email",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send Health Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Blockchain Email": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Career Talk Email": {
+      "main": [
+        [
+          {
+            "node": "Wait1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait1": {
+      "main": [
+        [
+          {
+            "node": "Send a message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Health Email": {
+      "main": [
+        [
+          {
+            "node": "Wait2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait2": {
+      "main": [
+        [
+          {
+            "node": "Send a message2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "staticData": null,
+  "pinData": {},
+  "triggerCount": 0,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  }
+}

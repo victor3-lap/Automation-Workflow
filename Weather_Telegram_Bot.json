@@ -1,0 +1,177 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 6
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        0,
+        0
+      ],
+      "id": "43cc2779-d249-4815-b6b6-ee19b5de4ebc",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "cityName": "Lagos"
+      },
+      "type": "n8n-nodes-base.openWeatherMap",
+      "typeVersion": 1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "e827573e-d68c-4120-a867-8c2fdc6ca584",
+      "name": "OpenWeatherMap",
+      "credentials": {
+        "openWeatherMapApi": {
+          "id": "W2aTUt6Uiq4k6KPA",
+          "name": "OpenWeatherMap account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "YOUR_TELEGRAM_CHAT_ID_HERE",
+        "text": "=Hey boss, this is the weather for today\ntemp: {{ $json.main.temp }}\nDesc: {{ $json.weather[0].description }}\nHum: {{ $json.main.humidity }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        416,
+        0
+      ],
+      "id": "0cde0174-066f-4526-b698-f50700bb69d5",
+      "name": "Send a text message",
+      "webhookId": "a0aa2775-b4b2-4418-8e50-475d69eca3dc",
+      "credentials": {
+        "telegramApi": {
+          "id": "ueoHA8MRoaZ0rWvg",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        512,
+        -160
+      ],
+      "id": "f3191402-be5a-4bce-92ba-335361a92cd5",
+      "name": "Telegram Trigger",
+      "webhookId": "0d17ef95-68ec-43ec-882a-3094aec21f9c",
+      "credentials": {
+        "telegramApi": {
+          "id": "ueoHA8MRoaZ0rWvg",
+          "name": "Telegram account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "OpenWeatherMap",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenWeatherMap": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "staticData": null,
+  "pinData": {
+    "OpenWeatherMap": [
+      {
+        "json": {
+          "coord": {
+            "lon": 3.75,
+            "lat": 6.5833
+          },
+          "weather": [
+            {
+              "id": 804,
+              "main": "Clouds",
+              "description": "overcast clouds",
+              "icon": "04d"
+            }
+          ],
+          "base": "stations",
+          "main": {
+            "temp": 24.38,
+            "feels_like": 25.25,
+            "temp_min": 24.38,
+            "temp_max": 24.38,
+            "pressure": 1013,
+            "humidity": 91,
+            "sea_level": 1013,
+            "grnd_level": 1013
+          },
+          "visibility": 10000,
+          "wind": {
+            "speed": 0.55,
+            "deg": 232,
+            "gust": 1.27
+          },
+          "clouds": {
+            "all": 100
+          },
+          "dt": 1784388084,
+          "sys": {
+            "country": "NG",
+            "sunrise": 1784353035,
+            "sunset": 1784397886
+          },
+          "timezone": 3600,
+          "id": 2332453,
+          "name": "Lagos",
+          "cod": 200
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ]
+  },
+  "triggerCount": 0,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  }
+}
